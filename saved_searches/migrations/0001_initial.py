@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('user_query', models.CharField(help_text=b'The text the user searched on. Useful for display.', max_length=1000)),
                 ('full_query', models.CharField(default=b'', help_text=b'The full query Haystack generated. Useful for searching again.', max_length=1000, blank=True)),
                 ('result_count', models.PositiveIntegerField(default=0, blank=True)),
-                ('created', models.DateTimeField(default=datetime.datetime.now, blank=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
                 ('user', models.ForeignKey(related_name='saved_searches', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
