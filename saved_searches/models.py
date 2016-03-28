@@ -30,10 +30,10 @@ class SavedSearchManager(models.Manager):
             qs = qs.filter(search_key=search_key)
         
         if collapsed is True:
-            initial_list_qs = qs.values('user_query').order_by().annotate(times_seen=models.Count('user_query'))
-            return initial_list_qs.values('user_query', 'times_seen').annotate(most_recent=models.Max('created')).order_by('-most_recent').filter(times_seen__gte=threshold)
+            initial_list_qs = qs.annotate(times_seen=models.Count('user_query'))
+            return initial_list_qs.annotate(most_recent=models.Max('created')).order_by('-most_recent').filter(times_seen__gte=threshold)
         else:
-            return qs.values('user_query', 'created').order_by('-created').annotate(times_seen=models.Count('user_query')).filter(times_seen__gte=threshold)
+            return qs.order_by('-created').annotate(times_seen=models.Count('user_query')).filter(times_seen__gte=threshold)
     
     def most_popular(self, user=None, search_key=None, threshold=1):
         """
