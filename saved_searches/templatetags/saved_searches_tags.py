@@ -24,7 +24,7 @@ class MostRecentNode(template.Node):
             temp_search_key = template.Variable(self.search_key)
             search_key = temp_search_key.resolve(context)
         
-        context[self.varname] = SavedSearch.objects.most_recent(user=user, search_key=search_key)[:self.limit]
+        context[self.varname] = SavedSearch.objects.most_recent(user=user, search_key=search_key, collapsed=False)[:self.limit]
         return ''
 
 
