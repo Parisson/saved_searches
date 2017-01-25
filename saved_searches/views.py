@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render
 from django.template import RequestContext
 from haystack.views import SearchView
 from saved_searches.models import SavedSearch
@@ -67,7 +68,7 @@ class SavedSearchView(SearchView):
         }
         context.update(self.extra_context())
 
-        return render_to_response(self.template, context, context_instance=self.context_class(self.request))
+        return render(request=self.request, template_name=self.template, context=context)
 
 
 def most_recent(request, username=None, search_key=None):
@@ -101,13 +102,12 @@ def most_recent(request, username=None, search_key=None):
         page = paginator.page(int(request.GET.get('page', 1)))
     except InvalidPage:
         raise Http404("Invalid page.")
-
-    return render_to_response('saved_searches/most_recent.html', {
-        'by_user': user,
-        'by_search_key': search_key,
-        'page': page,
-        'paginator': paginator,
-    }, context_instance=RequestContext(request))
+    context = {'by_user': user,
+               'by_search_key': search_key,
+               'page': page,
+               'paginator': paginator,
+               }
+    return render(request=request, template_name='saved_searches/most_recent.html', context=context)
 
 
 def most_popular(request, username=None, search_key=None):
@@ -141,11 +141,9 @@ def most_popular(request, username=None, search_key=None):
         page = paginator.page(int(request.GET.get('page', 1)))
     except InvalidPage:
         raise Http404("Invalid page.")
-
-    return render_to_response('saved_searches/most_popular.html', {
-        'by_user': user,
-        'by_search_key': search_key,
-        'page': page,
-        'paginator': paginator,
-    }, context_instance=RequestContext(request))
-
+    context = {'by_user': user,
+               'by_search_key': search_key,
+               'page': page,
+               'paginator': paginator,
+               }
+    return render(request=request, template_name='saved_searches/most_popular.html', context=context)
